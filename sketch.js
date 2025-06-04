@@ -30,8 +30,24 @@ function setup() {
   camX = (width - camSize) / 2;
   camY = (height - camSize) / 2;
   handpose = ml5.handpose(video, modelReady);
+
+  // 初始化鉛筆位置（以第一個字母的起點）
+  let pt = letterStartPoints[letters[0]];
+  pencilX = camX + camSize * pt.x;
+  pencilY = camY + camSize * pt.y;
 }
 
+function mousePressed() {
+  if (!gameStarted && mouseX > width/2 - 80 && mouseX < width/2 + 80 &&
+      mouseY > height/2 - 30 && mouseY < height/2 + 30) {
+    gameStarted = true;
+    // 遊戲開始時重設鉛筆位置
+    let pt = letterStartPoints[letters[currentLetterIndex]];
+    pencilX = camX + camSize * pt.x;
+    pencilY = camY + camSize * pt.y;
+    trails = [];
+  }
+}
 function modelReady() {
   handpose.on("predict", results => hands = results);
 }
